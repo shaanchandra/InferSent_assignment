@@ -52,7 +52,59 @@ This file includes all the model classes required for training and is structured
 
  3. ***biLSTM()***: Has 2 options and chooses to implement the right one based on model chosen:
 
-  - Encodes the provided sentences usnig a bi-directional LSTM network and returning the concatenation of final states of both the directions as the sentence representation.
+  - *pool = 0* : corresponds to normal biLSTM model that encodes the provided sentences usnig a bi-directional LSTM network and returns the concatenation of final states of both the directions as the sentence representation.
+  
+  - *pool = 1*: corresponds to the biLSTM(with max-pool) model that takes the concatenation of each hidden state and returns a fixed length vector by taking the maximum over each embedding dimension of the hidden state outputs of the sentences of the batch.
+  
+### ```dev_test_evals.py```
+
+This file includes module to evaluate the performance of the model after each EPOCH on the *validation set* and at termination on the *test set*. It also saves the model after each EPOCH in the directory provided. 
+
+NOTE: this does not perform *SentEval* evaluation. That is done by the *senteval.py* file.
+
+### ```senteval.py```
+
+Accepts the following paramaters as arguments (or none as DEFAULTs for each is set already):
+	
+ 1. ***model_name*** : (string) 'base / lstm / bilastm / bilstm_pool' (DEFAULT set to 'bilstm')
+ 2. ***senteval_path*** : (str) path to the cloned 'senteval' directory
+ 3. ***vec_path*** : (str) 'path for Glove embeddings (850B, 300D)'
+ 4. ***data_path*** : (str) 'path to the 'data' fodler in senteval directory'
+ 5. ***model_path*** : (str) 'path to the saved models (pickle files saved during training)'
+ 
+This performs the SentEval evaluation on the following transfer tasks:
+
+```python
+
+transfer_tasks = ['STS14','MR', 'CR', 'MPQA', 'SUBJ', 'SST2', 'SST5', 'TREC', 'MRPC',
+                      'SICKEntailment', 'SICKRelatedness', 'ImageCaptionRetrieval']
+```
+
+and using the following settings:
+
+```python
+
+params_senteval = {'task_path': FLAGS.data_path, 'usepytorch': True, 'kfold': 10}
+params_senteval['classifier'] = {'nhid': 0, 'optim': 'adam', 'batch_size': 64,
+                                 'tenacity': 5, 'epoch_size': 4}
+```
+				 
+### ```infer.py``` and ```Demo.ipynb```
+
+They are exactly the same files but in different interfaces. *infer.py* accepts the following arguments:
+	
+ 1. ***model_name*** : (string) 'base / lstm / bilastm / bilstm_pool' (DEFAULT set to 'bilstm')
+ 2. ***snli_path*** : (str) path to SNLI data to read and pre-process
+ 3. ***vec_path*** : (str) 'path to Glove embeddings (850B, 300D)'
+ 4. ***model_path*** : (str) 'path to the saved models (pickle files saved during training)'
+ 5. ***prem***: (str) The premise sentence as input
+ 6. ***hyp***: (str) The hypothesis sentence as input
+
+This returns model output (as the weight outputs of 3 classes at the final classifier layer) to give an idea of relative weight given to each choice along with the model's prediction as *entailment, neutral, contradiction*.
+
+
+
+
 
 
 	
