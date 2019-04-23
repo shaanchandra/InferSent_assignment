@@ -12,7 +12,7 @@ While the first hypothesis follows from the premise, indicated by the alignment 
 
 ## Code
 
-``` train.py```
+### ``` train.py```
 
   Accepts the following paramaters as arguments (or none as DEFAULTs for each is set already):
 	
@@ -31,7 +31,7 @@ While the first hypothesis follows from the premise, indicated by the alignment 
 This is the main function where the training happens and all the other modules declared in *models.py* , *data.py* and *dev_test_evals.py* are called. For further details, check the file for comments in each line and step. NOTE: to start the training process, you just need to run this file with the above mentioned paramaters (optional).
 
 
-```data.py```
+### ```data.py```
 
 This is where raw SNLI data is pre-processed and word-vecs are created using the GLOVE embeddings. It involves the following modules:
 
@@ -40,7 +40,7 @@ This is where raw SNLI data is pre-processed and word-vecs are created using the
 3. ***get_batch_from_idx()***: This takes batches of data, pads them to equal lengths and returns the word embeddings for word in each sentence.
 	
 
-``` models.py```
+### ``` models.py```
 
 This file includes all the model classes required for training and is structured as follows:
 1. ***LSTM_main()***: Based on the model being trained, initializes the right class's object in itself. It encodes the sentences pairs as ***u*** and ***v*** by the chosen encoder (LSTM/biLSTM/biLSTM(max-pool) and returns the feature for the classifier in the following form:
